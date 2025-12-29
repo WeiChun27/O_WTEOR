@@ -155,7 +155,7 @@ Classes:
     justify-content: center;
     text-align: center;
     background-size: cover;
-    background-image: url('../imgs/ui/sign.png');
+    background-image: url('/imgs/ui/sign.png');
     white-space: pre-line;
     color: #000;
 }
@@ -165,7 +165,7 @@ Classes:
     --zoom: 4;
     box-sizing: content-box;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/map.png');
+    border-image: url('/imgs/ui/map.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 12.75% 15.75% fill;
     border-image-repeat: repeat;
@@ -177,7 +177,7 @@ Classes:
     border-width: var(--size);
     border-style: solid;
     border-left-width: calc(var(--size) / 1.5);
-    border-image: url('../imgs/ui/book.png');
+    border-image: url('/imgs/ui/book.png');
     border-image-width: var(--size) var(--size) var(--size) calc(var(--size) / 1.5);
     border-image-slice: 8.5% 15% 12.75% 10% fill;
     border-image-repeat: stretch;
@@ -191,27 +191,27 @@ Classes:
     cursor: pointer;
     image-rendering: pixelated;
     background-size: cover;
-    background-image: url('../imgs/ui/button-inside.png');
+    background-image: url('/imgs/ui/button-inside.png');
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/button-border.png');
+    border-image: url('/imgs/ui/button-border.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 10% 3%;
     border-image-repeat: stretch;
     color: #d1d5db;
 } .button:hover {
     background-size: cover;
-    background-image: url('../imgs/ui/button-inside-hover.png');
+    background-image: url('/imgs/ui/button-inside-hover.png');
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/button-border-hover.png');
+    border-image: url('/imgs/ui/button-border-hover.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 10% 3%;
     border-image-repeat: stretch;
     color: #fef08a;
 } .button:active {
     background-size: cover;
-    background-image: url('../imgs/ui/button-inside-active.png');
+    background-image: url('/imgs/ui/button-inside-active.png');
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/button-border-active.png');
+    border-image: url('/imgs/ui/button-border-active.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 10% 3%;
     border-image-repeat: contain;
@@ -226,14 +226,14 @@ Classes:
 } .scrollbar::-webkit-scrollbar-thumb {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/scroll-thumb.png');
+    border-image: url('/imgs/ui/scroll-thumb.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
 } .scrollbar::-webkit-scrollbar-thumb:active {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/scroll-thumb-active.png');
+    border-image: url('/imgs/ui/scroll-thumb-active.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -242,7 +242,7 @@ Classes:
 .transparent-panel {
     --zoom: 10;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/transparent-panel.png');
+    border-image: url('/imgs/ui/transparent-panel.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 43% 43% fill;
     border-image-repeat: stretch;
@@ -253,7 +253,7 @@ Classes:
 .markdown table {
     --zoom: 10;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/panel.png');
+    border-image: url('/imgs/ui/panel.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 43% 43% fill;
     border-image-repeat: stretch;
@@ -262,7 +262,7 @@ Classes:
 .panel-dark {
     --zoom: 10;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/panel-dark.png');
+    border-image: url('/imgs/ui/panel-dark.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 43% 43% fill;
     border-image-repeat: stretch;
@@ -271,7 +271,7 @@ Classes:
 .transparent-achievement-panel {
     --zoom: 10;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/transparent-achievement-panel.png');
+    border-image: url('/imgs/ui/transparent-achievement-panel.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 45.5% 45.5% fill;
     border-image-repeat: stretch;
@@ -284,7 +284,7 @@ Classes:
 .markdown blockquote {
     --zoom: 10;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/achievement-panel.png');
+    border-image: url('/imgs/ui/achievement-panel.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 45.5% 45.5% fill;
     border-image-repeat: stretch;
@@ -293,7 +293,7 @@ Classes:
 .transparent-slot {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/transparent-slot.png');
+    border-image: url('/imgs/ui/transparent-slot.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -305,7 +305,7 @@ Classes:
 .scrollbar::-webkit-scrollbar-track {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/slot.png');
+    border-image: url('/imgs/ui/slot.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -314,7 +314,7 @@ Classes:
 .transparent-raised-slot {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/transparent-raised-slot.png');
+    border-image: url('/imgs/ui/transparent-raised-slot.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -325,7 +325,7 @@ Classes:
 .scrollbar::-webkit-scrollbar-corner {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/raised-slot.png');
+    border-image: url('/imgs/ui/raised-slot.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -333,7 +333,7 @@ Classes:
   .raised-slot-button:hover {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/raised-slot-hover.png');
+    border-image: url('/imgs/ui/raised-slot-hover.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -341,7 +341,7 @@ Classes:
   .raised-slot-button:active {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/raised-slot-active.png');
+    border-image: url('/imgs/ui/raised-slot-active.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -351,7 +351,7 @@ Classes:
 .enchanting-slot-button {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/enchanting-slot.png');
+    border-image: url('/imgs/ui/enchanting-slot.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -359,7 +359,7 @@ Classes:
   .enchanting-slot-button:hover {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/enchanting-slot-hover.png');
+    border-image: url('/imgs/ui/enchanting-slot-hover.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -367,7 +367,7 @@ Classes:
   .enchanting-slot-button:active {
     --zoom: 24;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/enchanting-slot-active.png');
+    border-image: url('/imgs/ui/enchanting-slot-active.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 33.5% 33.5% fill;
     border-image-repeat: stretch;
@@ -376,7 +376,7 @@ Classes:
 .anvil-textbox {
     --zoom: 16;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/anvil-textbox.png');
+    border-image: url('/imgs/ui/anvil-textbox.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 40% 40% fill;
     border-image-repeat: stretch;
@@ -385,7 +385,7 @@ Classes:
   .anvil-textbox:focus {
     --zoom: 16;
     border-width: calc(var(--block-size) / var(--zoom));
-    border-image: url('../imgs/ui/anvil-textbox-active.png');
+    border-image: url('/imgs/ui/anvil-textbox-active.png');
     border-image-width: calc(var(--block-size) / var(--zoom));
     border-image-slice: 40% 40% fill;
     border-image-repeat: stretch;
