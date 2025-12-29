@@ -17,3 +17,5 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+本地网页预览界面.url
+网页本地一键运行.bat

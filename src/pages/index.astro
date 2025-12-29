@@ -1,6 +1,33 @@
 ---
 import Base from "~/layouts/Base.astro";
 
+// 轮播配置参数
+const carouselConfig = {
+  maxImages: 0, // 最大显示图片数量，设为0表示显示所有
+  aspectRatio: "auto", // 图片宽高比，可选 "16/9", "4/3", "1/1", "auto"
+  autoSlideInterval: 5000, // 自动轮播间隔（毫秒）
+  showControls: true, // 显示控制按钮
+  showDots: true, // 显示指示点
+};
+
+// 加载carousel目录下的所有图片
+const carousel_files = await Astro.glob(`../../public/imgs/carousel/*`);
+let carouselImages = carousel_files.map(file => file.default);
+
+// 如果carousel目录没有图片，使用示例图片
+if (carouselImages.length === 0) {
+  carouselImages = [
+    "/imgs/blocks/diamond-block.png",
+    "/imgs/blocks/emerald-block.png", 
+    "/imgs/blocks/gold-block.png"
+  ];
+}
+
+// 根据配置限制图片数量
+if (carouselConfig.maxImages > 0 && carouselImages.length > carouselConfig.maxImages) {
+  carouselImages = carouselImages.slice(0, carouselConfig.maxImages);
+}
+
 const item_files = await Astro.glob(`../../public/imgs/items/*`)
 const painting_files = await Astro.glob(`../../public/imgs/paintings/*`)
 
@@ -11,14 +38,264 @@ const items = item_files.map(file => {
 const paintings = painting_files.map(file => {
     return file.default.split('/').pop().split('.')[0]
 });
----
 
+// 所有需要展示的UUID
+const uuids = [
+    "5428ca52-34c6-4ee5-a37f-eeb9b7cbb397", // 服主
+    "5c4926c6-4177-4d64-894e-0aff11fe1d20",
+    "20fc11b1-9279-408f-b8ff-5e35f962b2de",
+    "8b97c83c-7ed6-4530-bc8c-9a9dc7e7aa0a",
+    "11cf0940-0f2f-4a36-848d-70d322051e83",
+    "9e15a20f-c7d2-426a-8ba4-c6cdcee406d9",
+    "b2e562af-360e-4863-82be-9d161a2bc645",
+    "caa4c214-6b6c-4e80-a579-9c34ba255d2d"
+];
+
+// 获取玩家名的函数
+async function getName(uuid) {
+    try {
+        const res = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid.replace(/-/g, '')}`);
+        if (!res.ok) return "未知ID";
+        const data = await res.json();
+        return data.name || "未知ID";
+    } catch {
+        return "未知ID";
+    }
+}
+
+// 批量获取所有UUID对应的name
+const uuidNameMap = {};
+for (const uuid of uuids) {
+    uuidNameMap[uuid] = await getName(uuid);
+}
+---
+<style>
+@font-face {
+    font-family: 'CustomFont';
+    src: url('/fonts/5_Minecraft-AE(support-Chinese).ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+.markdown, body {
+    font-family: 'CustomFont', 'Microsoft YaHei', 'Arial', sans-serif;
+}
+</style>
 <Base>
+<!-- 图片轮播区域 - 页面顶部居中版 -->
+<div class="carousel-wrapper w-full sm:w-[90%] md:w-[80%] lg:w-[70%] mx-auto mt-0 mb-8">
+  <!-- 调试信息：共加载 {carouselImages.length} 张轮播图片 -->
+  <div class="text-center text-sm text-gray-500 mb-2">
+    已加载 {carouselImages.length} 张轮播图片
+  </div>
+  
+  <div class="carousel-outer-container aspect-[4/3] max-h-[70vh] min-h-[300px] rounded-lg shadow-lg overflow-hidden bg-gray-900 relative mx-auto">
+    <div class="carousel-inner-track flex h-full transition-transform duration-500 ease-in-out" id="simple-carousel-track" style={`width: ${carouselImages.length * 100}%`}>
+      <!-- 动态生成轮播图片 -->
+      {carouselImages.map((image, index) => (
+        <div class="carousel-slide-item flex-shrink-0 w-full h-full flex items-center justify-center p-4" style={`width: ${100 / carouselImages.length}%`}>
+          <img 
+            src={image} 
+            alt={`轮播图片${index + 1}`} 
+            class="w-full h-full object-contain rounded"
+            loading="lazy"
+            onerror="this.src='/imgs/blocks/dirt.png'"
+            style="image-rendering: pixelated;"
+          />
+          <div class="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+            {index + 1}/{carouselImages.length}
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <!-- 轮播控制按钮 -->
+    {carouselImages.length > 1 && (
+      <>
+        <button class="carousel-control-prev absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition z-10" id="simple-carousel-prev">
+          ◀
+        </button>
+        <button class="carousel-control-next absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/80 transition z-10" id="simple-carousel-next">
+          ▶
+        </button>
+      </>
+    )}
+    
+    <!-- 轮播指示点 - 放在轮播图片底部中间 -->
+    {carouselImages.length > 1 && (
+      <div class="carousel-indicators absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+        {carouselImages.map((_, index) => (
+          <button class="carousel-indicator w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition" data-index={index}></button>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+<!-- 轮播样式 -->
+<style>
+.carousel-wrapper {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.carousel-outer-container {
+  position: relative;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.carousel-slide-item {
+  box-sizing: border-box;
+}
+
+.carousel-slide-item img {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  font-size: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  transform: scale(1.1);
+}
+
+.carousel-indicators {
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.carousel-indicator.active {
+  background-color: #3b82f6 !important;
+  transform: scale(1.2);
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+  .carousel-outer-container {
+    aspect-ratio: 1/1;
+    min-height: 250px;
+  }
+  
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 8px;
+    height: 8px;
+    font-size: 1rem;
+  }
+  
+  .carousel-indicators {
+    padding: 0.25rem;
+  }
+  
+  .carousel-indicator {
+    width: 2px;
+    height: 2px;
+  }
+}
+</style>
+
+<!-- 简化版轮播JavaScript -->
+<script is:inline>
+document.addEventListener('DOMContentLoaded', function() {
+  const track = document.getElementById('simple-carousel-track');
+  const prevBtn = document.getElementById('simple-carousel-prev');
+  const nextBtn = document.getElementById('simple-carousel-next');
+  const indicators = document.querySelectorAll('.carousel-indicator');
+  
+  const slides = document.querySelectorAll('.carousel-slide-item');
+  const totalSlides = slides.length;
+  
+  if (totalSlides <= 1) {
+    // 只有一张图片时隐藏控制按钮和指示点
+    if (prevBtn) prevBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'none';
+    if (indicators.length > 0) {
+      indicators[0].parentElement.style.display = 'none';
+    }
+    return;
+  }
+  
+  let currentIndex = 0;
+  let autoSlideInterval = null;
+  const AUTO_SLIDE_DELAY = 5000; // 5秒
+  
+  // 更新轮播位置
+  function updateCarousel() {
+    const slideWidth = 100 / totalSlides;
+    track.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
+    
+    // 更新指示点
+    indicators.forEach((indicator, index) => {
+      indicator.classList.toggle('active', index === currentIndex);
+    });
+  }
+  
+  // 下一张
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    updateCarousel();
+  }
+  
+  // 上一张
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+    updateCarousel();
+  }
+  
+  // 跳转到指定索引
+  function goToSlide(index) {
+    if (index >= 0 && index < totalSlides) {
+      currentIndex = index;
+      updateCarousel();
+    }
+  }
+  
+  // 启动自动轮播
+  function startAutoSlide() {
+    if (autoSlideInterval) clearInterval(autoSlideInterval);
+    autoSlideInterval = setInterval(nextSlide, AUTO_SLIDE_DELAY);
+  }
+  
+  // 停止自动轮播
+  function stopAutoSlide() {
+    if (autoSlideInterval) clearInterval(autoSlideInterval);
+  }
+  
+  // 绑定按钮事件
+  if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+  if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+  
+  // 绑定指示点事件
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => goToSlide(index));
+  });
+  
+  // 鼠标悬停时暂停自动轮播
+  const carouselContainer = document.querySelector('.carousel-outer-container');
+  if (carouselContainer) {
+    carouselContainer.addEventListener('mouseenter', stopAutoSlide);
+    carouselContainer.addEventListener('mouseleave', startAutoSlide);
+  }
+  
+  // 初始化
+  updateCarousel();
+  startAutoSlide();
+});
+</script>
+
 <div class="flex flex-col justify-center w-full sm:w-[90%] md:w-[80%] lg:w-[70%] mx-auto gap-5 py-5 px-2 markdown">
     <h3 class="text-2xl text-center sm:text-4xl text-sky-500 font-extrabold drop-shadow-lg">——该网站目前还在不断建设中——</h3>
     <h3 class="text-2xl sm:text-4xl text-white color-blue">O_WTEOR</h3>
     <p class="indent-5 text-white">
-        O_WTEOR是一个创立于2022年7月20日的一个完全公益的，以Minecraft服务器为主的一个小组织。
+        O_WTEOR是一个创立于2022年7月20日的一个完全公益的，以Minecraft游戏服务器为主的一个小组织。
     </p>
     <h3 class="text-center text-4xl text-white">特色</h3>
     <div class="flex items-center justify-center">
@@ -51,16 +328,17 @@ const paintings = painting_files.map(file => {
 <div class="w-full flex flex-wrap justify-center gap-6 my-10">
     {
         [
-            { uuid: "5428ca52-34c6-4ee5-a37f-eeb9b7cbb397", name: "WeiChun27", role: "群主/服主", desc: "负责整体运营与技术支持" }
+            { uuid: "5428ca52-34c6-4ee5-a37f-eeb9b7cbb397", role: "群主/服主", desc: "负责整体运营与技术支持", bg: "bg-block-dirt" }
         ].map(member => (
-            <div class="flex flex-col items-center bg-block-dirt rounded-lg shadow-lg p-4 w-60 min-w-[240px]">
+            <div class={`flex flex-col items-center ${member.bg} rounded-lg shadow-lg p-4 w-60 min-w-[240px]`}>
                 <img 
-                    src={`https://mineskin.eu/armor/body/${member.uuid}/100.png`} 
-                    alt={member.name + '皮肤'} 
+                    src={`https://crafatar.com/renders/body/${member.uuid}?scale=10&default=MHF_Steve&overlay`} 
+                    alt={uuidNameMap[member.uuid] + '皮肤'} 
                     class="w-25 h-50 mb-2 object-cover"
                     style="image-rendering: pixelated;"
+                    onerror={`this.onerror=null;this.src='https://mineskin.eu/armor/body/${member.uuid}/100.png';`}
                 />
-                <span class="text-lg font-bold text-white">{member.name}</span>
+                <span class="text-lg font-bold text-white">{uuidNameMap[member.uuid]}</span>
                 <span class="text-base text-emerald-300 mt-1 w-full text-center truncate">{member.role}</span>
                 <span class="text-sm text-gray-300 mt-1 w-full text-center truncate">{member.desc}</span>
             </div>
@@ -71,21 +349,22 @@ const paintings = painting_files.map(file => {
 <div class="w-full flex flex-wrap justify-center gap-6 my-10">
     {
         [
-            { uuid: "5c4926c6-4177-4d64-894e-0aff11fe1d20", name: "Mr_Sea_0", role: "管理员", desc: "第一位管理员，日常管理与玩家服务" },
-            { uuid: "20fc11b1-9279-408f-b8ff-5e35f962b2de", name: "Ye_Modiao233",role:"管理员",desc:"RLCD服务器服主，兼O_WTEOR管理员"},
-            { uuid: "8b97c83c-7ed6-4530-bc8c-9a9dc7e7aa0a", name: "N1ngYu_13",role:"管理员",desc:"早期技术支持，对机械动力理解较深"},
-            { uuid: "11cf0940-0f2f-4a36-848d-70d322051e83", name: "Excutor_rain",role:"管理员",desc:"早期Linux服务器技术支持"},
-            { uuid: "9e15a20f-c7d2-426a-8ba4-c6cdcee406d9", name: "Xiaoyi233",role:"管理员",desc:"临时替补技术支持"}
+            { uuid: "5c4926c6-4177-4d64-894e-0aff11fe1d20", role: "管理员", desc: "第一位管理员，日常管理与玩家服务", bg: "bg-block-stone" },
+            { uuid: "20fc11b1-9279-408f-b8ff-5e35f962b2de", role:"管理员",desc:"RLCD服务器服主，兼O_WTEOR管理员", bg: "bg-block-grass" },
+            { uuid: "8b97c83c-7ed6-4530-bc8c-9a9dc7e7aa0a", role:"管理员",desc:"早期技术支持，对机械动力理解较深", bg: "bg-block-sand" },
+            { uuid: "11cf0940-0f2f-4a36-848d-70d322051e83", role:"管理员",desc:"早期Linux服务器技术支持", bg: "bg-block-cobblestone" },
+            { uuid: "9e15a20f-c7d2-426a-8ba4-c6cdcee406d9", role:"管理员",desc:"临时替补技术支持", bg: "bg-block-planks" }
             // 可继续添加更多团队成员
         ].map(member => (
-            <div class="flex flex-col items-center bg-block-dirt rounded-lg shadow-lg p-4 w-60 min-w-[240px]">
+            <div class={`flex flex-col items-center ${member.bg} rounded-lg shadow-lg p-4 w-60 min-w-[240px]`}>
                 <img 
-                    src={`https://mineskin.eu/armor/body/${member.uuid}/100.png`} 
-                    alt={member.name + '皮肤'} 
+                    src={`https://crafatar.com/renders/body/${member.uuid}?scale=10&default=MHF_Steve&overlay`} 
+                    alt={uuidNameMap[member.uuid] + '皮肤'} 
                     class="w-25 h-50 mb-2 object-cover"
                     style="image-rendering: pixelated;"
+                    onerror={`this.onerror=null;this.src='https://mineskin.eu/armor/body/${member.uuid}/100.png';`}
                 />
-                <span class="text-lg font-bold text-white">{member.name}</span>
+                <span class="text-lg font-bold text-white">{uuidNameMap[member.uuid]}</span>
                 <span class="text-base text-emerald-300 mt-1 w-full text-center truncate">{member.role}</span>
                 <span class="text-sm text-gray-300 mt-1 w-full text-center truncate">{member.desc}</span>
             </div>
@@ -98,19 +377,20 @@ const paintings = painting_files.map(file => {
 <div class="w-full flex flex-wrap justify-center gap-6 my-10">
     {
         [
-            { uuid: "b2e562af-360e-4863-82be-9d161a2bc645", name: "luckyslucky", amount: "¥30" },
-            { uuid: "caa4c214-6b6c-4e80-a579-9c34ba255d2d", name: "MoYu_147", amount: "¥66.66" },
-            { uuid: "8b97c83c-7ed6-4530-bc8c-9a9dc7e7aa0a", name: "N1ngYu_13", amount: "¥200" }
+            { uuid: "b2e562af-360e-4863-82be-9d161a2bc645", amount: "¥30", bg: "bg-block-gold" },
+            { uuid: "caa4c214-6b6c-4e80-a579-9c34ba255d2d", amount: "¥66.66", bg: "bg-block-diamond" },
+            { uuid: "8b97c83c-7ed6-4530-bc8c-9a9dc7e7aa0a", amount: "¥200", bg: "bg-block-emerald" }
             // 可继续添加更多玩家
         ].map(player => (
-            <div class="flex flex-col items-center bg-block-dirt rounded-lg shadow-lg p-4 w-50">
+            <div class={`flex flex-col items-center ${player.bg} rounded-lg shadow-lg p-4 w-50`}>
                 <img 
-                    src={`https://mineskin.eu/armor/body/${player.uuid}/100.png`} 
-                    alt={player.name + '皮肤'} 
+                    src={`https://crafatar.com/renders/body/${player.uuid}?scale=10&default=MHF_Steve&overlay`} 
+                    alt={uuidNameMap[player.uuid] + '皮肤'} 
                     class="w-25 h-50 mb-2 object-cover"
                     style="image-rendering: pixelated;"
+                    onerror={`this.onerror=null;this.src='https://mineskin.eu/armor/body/${player.uuid}/100.png';`}
                 />
-                <span class="text-lg font-bold text-white">{player.name}</span>
+                <span class="text-lg font-bold text-white">{uuidNameMap[player.uuid]}</span>
                 <span class="block text-base text-sky-300 mt-1 w-full mx-auto text-center truncate">
                     赞助金额：{player.amount}
                 </span>
